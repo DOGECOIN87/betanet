@@ -7,13 +7,13 @@
   - _Requirements: 3.1, 3.2, 3.3_
 
 - [ ] 2. Implement shared infrastructure utilities
-  - [-] 2.1 Create logging utility with structured output
+  - [x] 2.1 Create logging utility with structured output
     - Implement configurable logging levels and output formats
     - Add context-aware logging for debugging
     - Write unit tests for logging functionality
     - _Requirements: 3.2_
 
-  - [ ] 2.2 Implement configuration management system
+  - [-] 2.2 Implement configuration management system
     - Create config loader supporting YAML files and environment variables
     - Define configuration structs for both CLI tools
     - Add validation for configuration values
