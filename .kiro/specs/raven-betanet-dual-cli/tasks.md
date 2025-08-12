@@ -13,14 +13,14 @@
     - Write unit tests for logging functionality
     - _Requirements: 3.2_
 
-  - [-] 2.2 Implement configuration management system
+  - [x] 2.2 Implement configuration management system
     - Create config loader supporting YAML files and environment variables
     - Define configuration structs for both CLI tools
     - Add validation for configuration values
     - Write unit tests for config loading and validation
     - _Requirements: 3.3_
 
-  - [ ] 2.3 Build HTTP client with retry logic
+  - [-] 2.3 Build HTTP client with retry logic
     - Implement HTTP client wrapper with exponential backoff
     - Add timeout handling and error classification
     - Create unit tests with mocked HTTP responses
