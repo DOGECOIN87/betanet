@@ -20,14 +20,14 @@
     - Write unit tests for config loading and validation
     - _Requirements: 3.3_
 
-  - [-] 2.3 Build HTTP client with retry logic
+  - [x] 2.3 Build HTTP client with retry logic
     - Implement HTTP client wrapper with exponential backoff
     - Add timeout handling and error classification
     - Create unit tests with mocked HTTP responses
     - _Requirements: 3.4_
 
 - [ ] 3. Implement compliance check framework
-  - [ ] 3.1 Create compliance check interface and base types
+  - [-] 3.1 Create compliance check interface and base types
     - Define ComplianceCheck interface and CheckResult struct
     - Implement check registry for managing all 11 checks
     - Create result aggregation and reporting logic
