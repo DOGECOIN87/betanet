@@ -1,0 +1,96 @@
+{
+  "versions": [
+    {
+      "major": 139,
+      "minor": 0,
+      "build": 7258,
+      "patch": 127,
+      "channel": "Stable",
+      "platform": "Linux",
+      "date": "1969-12-31T18:00:00-06:00"
+    },
+    {
+      "major": 139,
+      "minor": 0,
+      "build": 7258,
+      "patch": 66,
+      "channel": "Stable",
+      "platform": "Linux",
+      "date": "1969-12-31T18:00:00-06:00"
+    },
+    {
+      "major": 138,
+      "minor": 0,
+      "build": 7204,
+      "patch": 183,
+      "channel": "Stable",
+      "platform": "Linux",
+      "date": "1969-12-31T18:00:00-06:00"
+    },
+    {
+      "major": 138,
+      "minor": 0,
+      "build": 7204,
+      "patch": 168,
+      "channel": "Stable",
+      "platform": "Linux",
+      "date": "1969-12-31T18:00:00-06:00"
+    },
+    {
+      "major": 138,
+      "minor": 0,
+      "build": 7204,
+      "patch": 157,
+      "channel": "Stable",
+      "platform": "Linux",
+      "date": "1969-12-31T18:00:00-06:00"
+    },
+    {
+      "major": 138,
+      "minor": 0,
+      "build": 7204,
+      "patch": 100,
+      "channel": "Stable",
+      "platform": "Linux",
+      "date": "1969-12-31T18:00:00-06:00"
+    },
+    {
+      "major": 138,
+      "minor": 0,
+      "build": 7204,
+      "patch": 92,
+      "channel": "Stable",
+      "platform": "Linux",
+      "date": "1969-12-31T18:00:00-06:00"
+    },
+    {
+      "major": 138,
+      "minor": 0,
+      "build": 7204,
+      "patch": 49,
+      "channel": "Stable",
+      "platform": "Linux",
+      "date": "1969-12-31T18:00:00-06:00"
+    },
+    {
+      "major": 137,
+      "minor": 0,
+      "build": 7151,
+      "patch": 119,
+      "channel": "Stable",
+      "platform": "Linux",
+      "date": "1969-12-31T18:00:00-06:00"
+    },
+    {
+      "major": 137,
+      "minor": 0,
+      "build": 7151,
+      "patch": 103,
+      "channel": "Stable",
+      "platform": "Linux",
+      "date": "1969-12-31T18:00:00-06:00"
+    }
+  ],
+  "updated_at": "2025-08-13T17:36:02.386440662-05:00",
+  "ttl": 86400000000000
+}

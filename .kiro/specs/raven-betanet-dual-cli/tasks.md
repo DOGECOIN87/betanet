@@ -27,14 +27,14 @@
     - _Requirements: 3.4_
 
 - [ ] 3. Implement compliance check framework
-  - [-] 3.1 Create compliance check interface and base types
+  - [x] 3.1 Create compliance check interface and base types
     - Define ComplianceCheck interface and CheckResult struct
     - Implement check registry for managing all 11 checks
     - Create result aggregation and reporting logic
     - Write unit tests for check framework
     - _Requirements: 1.1_
 
-  - [ ] 3.2 Implement binary analysis compliance checks (checks 1-4)
+  - [x] 3.2 Implement binary analysis compliance checks (checks 1-4)
     - Create binary parser for ELF, PE, and Mach-O formats
     - Implement file signature validation check
     - Add binary metadata extraction check
@@ -42,7 +42,7 @@
     - Write unit tests with sample binaries
     - _Requirements: 1.1, 1.5_
 
-  - [ ] 3.3 Implement cryptographic validation checks (checks 5-8)
+  - [x] 3.3 Implement cryptographic validation checks (checks 5-8)
     - Create certificate validation check
     - Implement signature verification check
     - Add hash integrity check
@@ -50,44 +50,44 @@
     - Write unit tests with test certificates and signatures
     - _Requirements: 1.1, 1.5_
 
-  - [ ] 3.4 Implement security and metadata checks (checks 9-11)
+  - [x] 3.4 Implement security and metadata checks (checks 9-11)
     - Create security flag validation check
     - Implement version information check
     - Add license compliance check
     - Write unit tests for each security check
     - _Requirements: 1.1, 1.5_
 
-- [ ] 4. Build SBOM generation system
-  - [ ] 4.1 Implement SBOM data models and interfaces
+- [x] 4. Build SBOM generation system
+  - [x] 4.1 Implement SBOM data models and interfaces
     - Create SBOM struct and Component data models
     - Define SBOMGenerator interface with format support
     - Implement component extraction from binary analysis
     - Write unit tests for data model validation
     - _Requirements: 1.3_
 
-  - [ ] 4.2 Create CycloneDX format generator
+  - [x] 4.2 Create CycloneDX format generator
     - Implement CycloneDX v1.5 JSON schema compliance
     - Add component relationship mapping
     - Create metadata and timestamp handling
     - Write unit tests with schema validation
     - _Requirements: 1.3_
 
-  - [ ] 4.3 Create SPDX format generator
+  - [x] 4.3 Create SPDX format generator
     - Implement SPDX 2.3 JSON schema compliance
     - Add license and copyright information handling
     - Create package and file relationship mapping
     - Write unit tests with schema validation
     - _Requirements: 1.3_
 
-- [ ] 5. Implement raven-linter CLI tool
-  - [ ] 5.1 Create main CLI structure and commands
+- [-] 5. Implement raven-linter CLI tool
+  - [x] 5.1 Create main CLI structure and commands
     - Implement main.go with Cobra root command
     - Add check subcommand with binary path argument
     - Create output format flags (--format json|text)
     - Write unit tests for CLI argument parsing
     - _Requirements: 1.1, 1.2_
 
-  - [ ] 5.2 Integrate compliance checks with CLI
+  - [x] 5.2 Integrate compliance checks with CLI
     - Wire compliance check registry to check command
     - Implement result formatting for JSON and text output
     - Add progress reporting during check execution
@@ -95,80 +95,80 @@
     - Write integration tests with sample binaries
     - _Requirements: 1.1, 1.2, 1.4_
 
-  - [ ] 5.3 Add SBOM generation to check command
+  - [x] 5.3 Add SBOM generation to check command
     - Integrate SBOM generator with compliance check workflow
     - Add SBOM format selection and output path handling
     - Implement concurrent SBOM generation during checks
     - Write integration tests validating SBOM output
     - _Requirements: 1.3_
 
-- [ ] 6. Implement Chrome uTLS template generation system
-  - [ ] 6.1 Create Chrome version management
+- [-] 6. Implement Chrome uTLS template generation system
+  - [x] 6.1 Create Chrome version management
     - Implement ChromeVersion struct and version comparison logic
     - Create Chrome release API client for fetching latest versions
     - Add version caching and update detection
     - Write unit tests for version handling and API integration
     - _Requirements: 2.4, 2.5_
 
-  - [ ] 6.2 Build TLS ClientHello generation
+  - [x] 6.2 Build TLS ClientHello generation
     - Implement Chrome TLS fingerprint replication using uTLS library
     - Create deterministic ClientHello blob generation
     - Add support for Chrome Stable N and N-2 versions
     - Write unit tests comparing against golden files
     - _Requirements: 2.1_
 
-  - [ ] 6.3 Implement JA3 fingerprint calculation and testing
+  - [x] 6.3 Implement JA3 fingerprint calculation and testing
     - Create JA3 fingerprint calculator from ClientHello bytes
     - Implement connection testing with target servers
     - Add fingerprint verification against expected Chrome signatures
     - Write unit tests for JA3 calculation accuracy
     - _Requirements: 2.2_
 
-- [ ] 7. Implement chrome-utls-gen CLI tool
-  - [ ] 7.1 Create main CLI structure and commands
+- [-] 7. Implement chrome-utls-gen CLI tool
+  - [x] 7.1 Create main CLI structure and commands
     - Implement main.go with Cobra root command
     - Add generate, ja3-test, and update subcommands
     - Create command-line argument parsing and validation
     - Write unit tests for CLI structure
     - _Requirements: 2.1, 2.2, 2.4_
 
-  - [ ] 7.2 Implement generate command
+  - [x] 7.2 Implement generate command
     - Wire TLS ClientHello generation to generate command
     - Add output file handling and binary blob writing
     - Implement version selection and template caching
     - Write integration tests validating generated output
     - _Requirements: 2.1_
 
-  - [ ] 7.3 Implement ja3-test command
+  - [x] 7.3 Implement ja3-test command
     - Integrate JA3 testing functionality with CLI
     - Add target server connection and fingerprint extraction
     - Implement fingerprint comparison and verification reporting
     - Write integration tests with test servers
     - _Requirements: 2.2_
 
-  - [ ] 7.4 Implement update command
+  - [x] 7.4 Implement update command
     - Wire Chrome version updater to update command
     - Add template regeneration and cache invalidation
     - Implement update status reporting and error handling
     - Write integration tests for update workflow
     - _Requirements: 2.4, 2.5_
 
-- [ ] 8. Create comprehensive test suite
-  - [ ] 8.1 Set up integration test framework
+- [-] 8. Create comprehensive test suite
+  - [x] 8.1 Set up integration test framework
     - Create test data directory structure with golden files
     - Implement test binary fixtures for compliance checking
     - Add Chrome handshake golden files for N and N-2 versions
     - Create integration test runner with cleanup logic
     - _Requirements: 5.1, 5.2, 5.3_
 
-  - [ ] 8.2 Build end-to-end CLI tests
+  - [x] 8.2 Build end-to-end CLI tests
     - Create full workflow tests for raven-linter check command
     - Implement complete chrome-utls-gen command testing
     - Add error scenario testing for both CLI tools
     - Write performance tests for large binary analysis
     - _Requirements: 5.2, 5.4_
 
-  - [ ] 8.3 Add cross-platform compatibility tests
+  - [x] 8.3 Add cross-platform compatibility tests
     - Create tests for Linux, macOS, and Windows binary formats
     - Implement platform-specific binary analysis validation
     - Add cross-platform TLS handshake generation tests

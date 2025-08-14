@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"context"
 	"io"
 	"os"
 	"strings"
@@ -115,4 +116,22 @@ func ParseLogFormat(format string) LogFormat {
 	default:
 		return LogFormatText
 	}
+}
+
+// Context key for logger
+type contextKey string
+
+const loggerContextKey contextKey = "logger"
+
+// WithLogger adds a logger to the context
+func WithLogger(ctx context.Context, logger *Logger) context.Context {
+	return context.WithValue(ctx, loggerContextKey, logger)
+}
+
+// LoggerFromContext retrieves a logger from the context
+func LoggerFromContext(ctx context.Context) *Logger {
+	if logger, ok := ctx.Value(loggerContextKey).(*Logger); ok {
+		return logger
+	}
+	return nil
 }
