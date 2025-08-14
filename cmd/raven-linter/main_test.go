@@ -145,7 +145,7 @@ func TestCheckCommand(t *testing.T) {
 			name:        "nonexistent binary",
 			args:        []string{"check", "/nonexistent/binary"},
 			expectError: true,
-			errorMsg:    "binary file does not exist",
+			errorMsg:    "binary file not found",
 		},
 	}
 

@@ -175,66 +175,66 @@
     - Write tests for different architecture support
     - _Requirements: 7.1_
 
-- [ ] 9. Implement GitHub Actions CI/CD workflows
-  - [ ] 9.1 Create spec-linter workflow
+- [x] 9. Implement GitHub Actions CI/CD workflows
+  - [x] 9.1 Create spec-linter workflow
     - Implement build and test pipeline for raven-linter
     - Add compliance check execution on sample binaries
     - Create SBOM artifact upload and validation
     - Add workflow failure handling for compliance failures
     - _Requirements: 4.2_
 
-  - [ ] 9.2 Create chrome-utls-gen workflow
+  - [x] 9.2 Create chrome-utls-gen workflow
     - Implement build and test pipeline for chrome-utls-gen
     - Add ClientHello generation and JA3 self-test execution
     - Create workflow failure handling for JA3 mismatches
     - Add artifact generation for generated templates
     - _Requirements: 4.3_
 
-  - [ ] 9.3 Implement auto-refresh workflow
+  - [x] 9.3 Implement auto-refresh workflow
     - Create scheduled workflow for Chrome version checking
     - Add automatic template regeneration and commit logic
     - Implement PR creation for template updates
     - Write workflow tests and validation
     - _Requirements: 2.6_
 
-- [ ] 10. Build cross-platform distribution system
-  - [ ] 10.1 Set up build automation
+- [x] 10. Build cross-platform distribution system
+  - [x] 10.1 Set up build automation
     - Create Makefile with cross-compilation targets
     - Implement version embedding via Go linker flags
     - Add binary optimization and compression
     - Create checksum generation for all artifacts
     - _Requirements: 7.1, 7.2_
 
-  - [ ] 10.2 Implement release automation
+  - [x] 10.2 Implement release automation
     - Create GitHub Actions release workflow
     - Add automated artifact publishing to GitHub Releases
     - Implement release notes generation from commits
     - Add release validation and rollback procedures
     - _Requirements: 7.3_
 
-  - [ ] 10.3 Add update mechanism
+  - [x] 10.3 Add update mechanism
     - Implement --update flag for both CLI tools
     - Create GitHub Releases API integration for update checking
     - Add in-place binary update functionality
     - Write tests for update mechanism safety
     - _Requirements: 7.5_
 
-- [ ] 11. Create documentation and final integration
-  - [ ] 11.1 Write comprehensive README
+- [x] 11. Create documentation and final integration
+  - [x] 11.1 Write comprehensive README
     - Create installation instructions for all platforms
     - Add usage examples for all commands and flags
     - Document CI/CD integration steps and examples
     - Include troubleshooting guide and FAQ
     - _Requirements: 6.1, 6.2_
 
-  - [ ] 11.2 Add CLI help and error messaging
+  - [x] 11.2 Add CLI help and error messaging
     - Implement detailed --help output for all commands
     - Create actionable error messages with fix suggestions
     - Add usage examples in CLI output when run without arguments
     - Write tests validating help text and error messages
     - _Requirements: 6.3, 6.4_
 
-  - [ ] 11.3 Final integration testing and validation
+  - [x] 11.3 Final integration testing and validation
     - Run complete end-to-end testing of both CLI tools
     - Validate all compliance checks against real binaries
     - Test Chrome template generation with current stable versions

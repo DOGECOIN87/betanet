@@ -32,9 +32,24 @@ func main() {
 	rootCmd := &cobra.Command{
 		Use:   "chrome-utls-gen",
 		Short: "Chrome-Stable (N-2) uTLS Template Generator",
-		Long: `A utility to generate a deterministic TLS ClientHello identical to Chrome 
-Stable (N or N-2), verify it via JA3 fingerprint self-test, and auto-refresh 
-when Chrome stable tags update.
+		Long: `A utility to generate deterministic TLS ClientHello templates identical to Chrome 
+Stable (N or N-2), verify them via JA3 fingerprint testing, and automatically 
+refresh when Chrome stable versions update.
+
+FEATURES:
+• Generate byte-perfect Chrome TLS ClientHello templates
+• Support for Chrome Stable (N) and Stable (N-2) versions  
+• JA3 fingerprint calculation and verification
+• Automatic Chrome version detection and updates
+• Template caching for offline usage
+• Cross-platform binary self-updates
+
+SUPPORTED CHROME VERSIONS:
+• Chrome 70+ with automatic uTLS fingerprint mapping
+• Focus on Stable (N) and Stable (N-2) for maximum compatibility
+• Post-quantum cryptography support for Chrome 115+
+
+For detailed documentation, visit: https://github.com/raven-betanet/dual-cli
 
 Examples:
   # Generate ClientHello for latest Chrome stable
@@ -46,8 +61,11 @@ Examples:
   # Update Chrome version templates
   chrome-utls-gen update
 
-  # Show version information
-  chrome-utls-gen version`,
+  # Check for binary updates
+  chrome-utls-gen self-update --check-only
+
+  # Generate for specific Chrome version
+  chrome-utls-gen generate --version 120.0.6099.109 --output chrome120.bin`,
 		Version: fmt.Sprintf("%s (commit: %s, built: %s)", version, commit, date),
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			return initializeGlobals()
@@ -67,6 +85,28 @@ Examples:
 	rootCmd.AddCommand(newGenerateCmd())
 	rootCmd.AddCommand(newJA3TestCmd())
 	rootCmd.AddCommand(newUpdateCmd())
+	rootCmd.AddCommand(newSelfUpdateCmd())
+
+	// Show help when run without arguments
+	rootCmd.Run = func(cmd *cobra.Command, args []string) {
+		fmt.Printf("Chrome-Stable (N-2) uTLS Template Generator\n")
+		fmt.Printf("==========================================\n\n")
+		fmt.Printf("Generate Chrome TLS ClientHello templates and test JA3 fingerprints.\n\n")
+		fmt.Printf("Quick Start:\n")
+		fmt.Printf("  %s generate --output clienthello.bin       # Generate ClientHello template\n", cmd.Name())
+		fmt.Printf("  %s ja3-test --target example.com:443       # Test JA3 fingerprint\n", cmd.Name())
+		fmt.Printf("  %s update                                   # Update Chrome templates\n", cmd.Name())
+		fmt.Printf("  %s self-update --check-only                # Check for binary updates\n\n", cmd.Name())
+		fmt.Printf("For detailed help: %s --help\n", cmd.Name())
+		fmt.Printf("For command help: %s <command> --help\n\n", cmd.Name())
+		fmt.Printf("Available Commands:\n")
+		for _, subCmd := range cmd.Commands() {
+			if !subCmd.Hidden {
+				fmt.Printf("  %-12s %s\n", subCmd.Name(), subCmd.Short)
+			}
+		}
+		fmt.Printf("\nDocumentation: https://github.com/raven-betanet/dual-cli\n")
+	}
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
@@ -107,7 +147,25 @@ func newGenerateCmd() *cobra.Command {
 		Long: `Generate a deterministic TLS ClientHello blob identical to Chrome Stable handshake bytes.
 The generated template can be used for TLS fingerprinting and testing purposes.
 
-The tool supports Chrome Stable (N) and Chrome Stable (N-2) versions.`,
+SUPPORTED VERSIONS:
+• Chrome Stable (N) - Latest stable release
+• Chrome Stable (N-2) - Two versions behind latest stable
+• Chrome 70+ with automatic uTLS fingerprint mapping
+• Post-quantum cryptography support for Chrome 115+
+
+OUTPUT:
+• Binary ClientHello blob file
+• JA3 fingerprint hash and string
+• Template metadata and generation timestamp
+
+TEMPLATE CACHING:
+Templates are cached locally for offline usage and performance:
+• Default location: ~/.raven-betanet/templates/
+• Custom location via --cache flag
+• JSON format with metadata
+
+The generated ClientHello should produce identical JA3 fingerprints
+to real Chrome connections when tested against servers.`,
 		Example: `  # Generate ClientHello for latest Chrome stable
   chrome-utls-gen generate --output clienthello.bin
 
@@ -115,7 +173,10 @@ The tool supports Chrome Stable (N) and Chrome Stable (N-2) versions.`,
   chrome-utls-gen generate --version 120.0.6099.109 --output chrome120.bin
 
   # Use custom template cache directory
-  chrome-utls-gen generate --cache ./templates --output clienthello.bin`,
+  chrome-utls-gen generate --cache ./templates --output clienthello.bin
+
+  # Generate with verbose logging
+  chrome-utls-gen generate --output clienthello.bin --verbose`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runGenerate(outputFile, chromeVersion, templateCache)
 		},
@@ -143,19 +204,38 @@ func newJA3TestCmd() *cobra.Command {
 		Long: `Connect to a target server using Chrome TLS fingerprint and extract the JA3 fingerprint.
 Verify that the fingerprint matches expected Chrome signatures.
 
-This command helps validate that the generated ClientHello produces the correct JA3 fingerprint
-when connecting to real servers.`,
-		Example: `  # Test JA3 fingerprint against example.com
+JA3 FINGERPRINTING:
+JA3 is a method for fingerprinting TLS clients based on their ClientHello parameters.
+It creates a hash from TLS version, cipher suites, extensions, elliptic curves, and formats.
+
+VERIFICATION MODES:
+• Expected Hash - Compare against a specific JA3 hash you provide
+• Known Chrome Hashes - Compare against database of known Chrome fingerprints
+• No Verification - Just extract and display the JA3 fingerprint
+
+CONNECTION TESTING:
+• Establishes real TLS connection to target server
+• Extracts JA3 string and hash from the handshake
+• Reports connection details (TLS version, cipher suite, timing)
+• Handles connection failures gracefully with detailed error messages
+
+This command helps validate that generated ClientHello templates produce
+correct JA3 fingerprints when connecting to real servers.`,
+		Example: `  # Basic JA3 test against example.com
   chrome-utls-gen ja3-test --target example.com:443
 
   # Test with specific Chrome version
   chrome-utls-gen ja3-test --target example.com:443 --version 120.0.6099.109
 
-  # Test with expected JA3 hash verification
+  # Verify against expected JA3 hash
   chrome-utls-gen ja3-test --target example.com:443 --expected cd08e31494f9531f560d64c695473da9
 
-  # Test with custom timeout
-  chrome-utls-gen ja3-test --target example.com:443 --timeout 30s`,
+  # Test with custom timeout for slow connections
+  chrome-utls-gen ja3-test --target example.com:443 --timeout 30s
+
+  # Test multiple targets (run command multiple times)
+  chrome-utls-gen ja3-test --target httpbin.org:443
+  chrome-utls-gen ja3-test --target github.com:443`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runJA3Test(target, chromeVersion, timeout, expectedJA3)
 		},
@@ -185,11 +265,32 @@ func newUpdateCmd() *cobra.Command {
 		Long: `Fetch the latest Chrome Stable versions and regenerate ClientHello templates.
 This command checks for new Chrome releases and updates the cached templates accordingly.
 
-The update process:
+UPDATE PROCESS:
 1. Fetches latest Chrome versions from Chromium API
-2. Compares with cached versions
-3. Regenerates templates if newer versions are found
-4. Updates template cache and metadata`,
+2. Compares with cached versions to detect changes
+3. Regenerates templates for Stable (N) and Stable (N-2) versions
+4. Updates template cache and metadata files
+5. Validates generated templates against known fingerprints
+
+CHROME VERSION API:
+• Uses official Chromium dashboard API
+• Focuses on Stable channel releases
+• Automatically detects N and N-2 versions
+• Respects API rate limits with exponential backoff
+
+TEMPLATE CACHING:
+• Default location: ~/.raven-betanet/templates/
+• JSON format with metadata and timestamps
+• Version cache for efficient update detection
+• Offline usage support
+
+DRY RUN MODE:
+Use --dry-run to preview what would be updated without making changes.
+This is useful for CI/CD pipelines and automated scripts.
+
+FORCE UPDATE:
+Use --force to regenerate templates even if versions haven't changed.
+Useful for testing or recovering from corrupted cache files.`,
 		Example: `  # Update templates if new Chrome versions are available
   chrome-utls-gen update
 
@@ -200,7 +301,10 @@ The update process:
   chrome-utls-gen update --dry-run
 
   # Use custom template cache directory
-  chrome-utls-gen update --cache ./templates`,
+  chrome-utls-gen update --cache ./templates
+
+  # Update with verbose logging
+  chrome-utls-gen update --verbose`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runUpdate(force, templateCache, dryRun)
 		},
@@ -290,7 +394,7 @@ func runJA3Test(target, chromeVersion, timeout, expectedJA3 string) error {
 	// Parse timeout duration
 	timeoutDuration, err := time.ParseDuration(timeout)
 	if err != nil {
-		return fmt.Errorf("invalid timeout format: %w", err)
+		return fmt.Errorf("invalid timeout format '%s': %w\n\nSupported timeout formats:\n  • 10s - 10 seconds\n  • 30s - 30 seconds\n  • 1m - 1 minute\n  • 1m30s - 1 minute 30 seconds\n\nExample: --timeout 30s", timeout, err)
 	}
 
 	// Initialize Chrome client
@@ -673,5 +777,115 @@ func cacheTemplate(template *tlsgen.ClientHelloTemplate, cacheDir string) error 
 		return fmt.Errorf("failed to write template cache: %w", err)
 	}
 
+	return nil
+}
+
+// newSelfUpdateCmd creates the self-update subcommand for updating the binary
+func newSelfUpdateCmd() *cobra.Command {
+	var (
+		checkOnly bool
+		force     bool
+	)
+
+	cmd := &cobra.Command{
+		Use:   "self-update",
+		Short: "Update chrome-utls-gen binary to the latest version",
+		Long: `Check for and install the latest version of chrome-utls-gen from GitHub releases.
+
+The self-update command will:
+1. Check the GitHub releases API for the latest version
+2. Compare with the current version
+3. Download and install the new version if available
+4. Create a backup of the current binary before updating
+
+Note: This is different from the 'update' command which updates Chrome templates.
+
+Examples:
+  chrome-utls-gen self-update                    # Check and update if newer version available
+  chrome-utls-gen self-update --check-only       # Only check for updates, don't install
+  chrome-utls-gen self-update --force            # Force update even if versions are the same`,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runSelfUpdate(cmd, checkOnly, force)
+		},
+	}
+
+	cmd.Flags().BoolVar(&checkOnly, "check-only", false, "Only check for updates without installing")
+	cmd.Flags().BoolVar(&force, "force", false, "Force update even if current version is up to date")
+
+	return cmd
+}
+
+// runSelfUpdate executes the self-update command
+func runSelfUpdate(cmd *cobra.Command, checkOnly, force bool) error {
+	logger := utils.NewLogger(utils.LoggerConfig{
+		Level:  utils.LogLevel(logLevel),
+		Format: utils.LogFormat(logFormat),
+	})
+
+	// Create updater
+	updaterConfig := utils.UpdaterConfig{
+		Repository:     "raven-betanet/dual-cli", // Replace with actual repository
+		BinaryName:     "chrome-utls-gen",
+		CurrentVersion: version,
+		Logger:         logger,
+	}
+
+	updater := utils.NewUpdater(updaterConfig)
+
+	// Check for updates
+	fmt.Printf("Checking for updates...\n")
+	release, hasUpdate, err := updater.CheckForUpdate()
+	if err != nil {
+		return fmt.Errorf("failed to check for updates: %w", err)
+	}
+
+	// Display current version info
+	fmt.Printf("Current version: %s\n", version)
+	
+	if release != nil {
+		fmt.Printf("Latest version:  %s\n", release.TagName)
+	}
+
+	if !hasUpdate && !force {
+		fmt.Printf("✅ You are already running the latest version!\n")
+		return nil
+	}
+
+	if force && !hasUpdate {
+		fmt.Printf("⚠️  Forcing update to same version: %s\n", release.TagName)
+	} else if hasUpdate {
+		fmt.Printf("🔄 New version available: %s\n", release.TagName)
+	}
+
+	// If check-only mode, stop here
+	if checkOnly {
+		if hasUpdate {
+			fmt.Printf("\nTo update, run: chrome-utls-gen self-update\n")
+		}
+		return nil
+	}
+
+	// Confirm update
+	if !force {
+		fmt.Printf("\nDo you want to update to %s? [y/N]: ", release.TagName)
+		var response string
+		fmt.Scanln(&response)
+		
+		if strings.ToLower(response) != "y" && strings.ToLower(response) != "yes" {
+			fmt.Printf("Update cancelled.\n")
+			return nil
+		}
+	}
+
+	// Perform update
+	fmt.Printf("Updating to %s...\n", release.TagName)
+	
+	if err := updater.Update(release, force); err != nil {
+		return fmt.Errorf("update failed: %w", err)
+	}
+
+	fmt.Printf("✅ Successfully updated to %s!\n", release.TagName)
+	fmt.Printf("Please restart the application to use the new version.\n")
+	
 	return nil
 }
